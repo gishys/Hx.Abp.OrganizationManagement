@@ -1,0 +1,38 @@
+name: Multi-package NuGet Workflow
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "8.0.104"
+
+      - name: Build and pack NuGet packages
+        run: |
+          version=$(echo "${{ github.event.release.tag_name }}" | cut -c 2-)
+          echo "Setting version to $version"
+          dotnet build src/OrganizationManagement.Application/OrganizationManagement.Application.csproj -c Release
+          dotnet pack src/OrganizationManagement.Application/OrganizationManagement.Application.csproj -c Release -o ./src/OrganizationManagement.Application /p:PackageVersion=$version
+          dotnet build src/OrganizationManagement.Application.Contracts/OrganizationManagement.Application.Contracts.csproj -c Release
+          dotnet pack src/OrganizationManagement.Application.Contracts/OrganizationManagement.Application.Contracts.csproj -c Release -o ./src/OrganizationManagement.Application.Contracts /p:PackageVersion=$version
+          dotnet build src/OrganizationManagement.HttpApi/OrganizationManagement.HttpApi.csproj -c Release
+          dotnet pack src/OrganizationManagement.HttpApi/OrganizationManagement.HttpApi.csproj -c Release -o ./src/OrganizationManagement.HttpApi /p:PackageVersion=$version
+          cp ./src/OrganizationManagement.Application/*.nupkg $GITHUB_WORKSPACE
+          cp ./src/OrganizationManagement.Application.Contracts/*.nupkg $GITHUB_WORKSPACE
+          cp ./src/OrganizationManagement.HttpApi/*.nupkg $GITHUB_WORKSPACE
+
+      - name: Push NuGet packages
+        run: |
+          dotnet nuget push ./src/OrganizationManagement.Application/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+          dotnet nuget push ./src/OrganizationManagement.Application.Contracts/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+          dotnet nuget push ./src/OrganizationManagement.HttpApi/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
