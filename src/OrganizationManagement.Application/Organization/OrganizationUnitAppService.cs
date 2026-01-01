@@ -45,7 +45,7 @@ public class OrganizationUnitAppService : IdentityAppServiceBase, IOrganizationU
         input.MapExtraPropertiesTo(organizationUnit);
 
         await OrganizationUnitManager.CreateAsync(organizationUnit);
-        await CurrentUnitOfWork.SaveChangesAsync();
+        await CurrentUnitOfWork!.SaveChangesAsync();
 
         return ObjectMapper.Map<OrganizationUnit, OrganizationUnitDto>(organizationUnit);
     }
@@ -92,7 +92,7 @@ public class OrganizationUnitAppService : IdentityAppServiceBase, IOrganizationU
 
     public virtual async Task<OrganizationUnitDto> GetAsync(Guid id)
     {
-        var organizationUnit = await OrganizationUnitRepository.FindAsync(id);
+        var organizationUnit = await OrganizationUnitRepository.GetAsync(id);
 
         return ObjectMapper.Map<OrganizationUnit, OrganizationUnitDto>(organizationUnit);
     }
@@ -201,7 +201,7 @@ public class OrganizationUnitAppService : IdentityAppServiceBase, IOrganizationU
         input.MapExtraPropertiesTo(organizationUnit);
 
         await OrganizationUnitManager.UpdateAsync(organizationUnit);
-        await CurrentUnitOfWork.SaveChangesAsync();
+        await CurrentUnitOfWork!.SaveChangesAsync();
 
         return ObjectMapper.Map<OrganizationUnit, OrganizationUnitDto>(organizationUnit);
     }
@@ -216,7 +216,7 @@ public class OrganizationUnitAppService : IdentityAppServiceBase, IOrganizationU
             await UserManager.AddToOrganizationUnitAsync(user, organizationUnit);
         }
 
-        await CurrentUnitOfWork.SaveChangesAsync();
+        await CurrentUnitOfWork!.SaveChangesAsync();
     }
 
     public virtual async Task AddRolesAsync(Guid id, OrganizationUnitAddRoleDto input)
@@ -229,7 +229,7 @@ public class OrganizationUnitAppService : IdentityAppServiceBase, IOrganizationU
             await OrganizationUnitManager.AddRoleToOrganizationUnitAsync(role, organizationUnit);
         }
 
-        await CurrentUnitOfWork.SaveChangesAsync();
+        await CurrentUnitOfWork!.SaveChangesAsync();
     }
 
     public virtual async Task DeleteRoleAsync(Guid organizationUnitId, Guid roleId)
