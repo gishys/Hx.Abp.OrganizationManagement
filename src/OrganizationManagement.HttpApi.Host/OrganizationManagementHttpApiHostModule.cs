@@ -66,10 +66,11 @@ public class OrganizationManagementHttpApiHostModule : AbpModule
 
     private void ConfigureUrls(IConfiguration _)
     {
-        Configure<AbpAspNetCoreMvcOptions>(options =>
-        {
-            options.ConventionalControllers.Create(typeof(OrganizationManagementApplicationModule).Assembly);
-        });
+        // 禁用自动 API 控制器，使用手动创建的 Controller
+        // Configure<AbpAspNetCoreMvcOptions>(options =>
+        // {
+        //     options.ConventionalControllers.Create(typeof(OrganizationManagementApplicationModule).Assembly);
+        // });
     }
 
     private void ConfigureConventionalControllers()

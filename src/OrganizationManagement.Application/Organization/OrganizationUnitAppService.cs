@@ -244,10 +244,27 @@ public class OrganizationUnitAppService : IdentityAppServiceBase, IOrganizationU
         await UserManager.RemoveFromOrganizationUnitAsync(userId, organizationUnitId);
     }
 
-    public async Task<ICollection<IdentityUserOrganizationUnit>?> GetOrganizationAsync(Guid userId)
+    public virtual async Task<ListResultDto<OrganizationUnitDto>> GetOrganizationAsync(Guid userId)
     {
         var user = await UserRepository.GetAsync(userId);
-        return user?.OrganizationUnits;
+        if (user?.OrganizationUnits == null || user.OrganizationUnits.Count == 0)
+        {
+            return new ListResultDto<OrganizationUnitDto>([]);
+        }
+
+        var organizationUnitIds = user.OrganizationUnits.Select(ou => ou.OrganizationUnitId).ToList();
+        var organizationUnits = new List<OrganizationUnit>();
+        foreach (var id in organizationUnitIds)
+        {
+            var orgUnit = await OrganizationUnitRepository.FindAsync(id);
+            if (orgUnit != null)
+            {
+                organizationUnits.Add(orgUnit);
+            }
+        }
+
+        return new ListResultDto<OrganizationUnitDto>(
+            ObjectMapper.Map<List<OrganizationUnit>, List<OrganizationUnitDto>>(organizationUnits));
     }
 
     public virtual async Task<ListResultDto<OrganizationUnitDto>> GetOrganizationUnitsByUserIdAsync(Guid userId)

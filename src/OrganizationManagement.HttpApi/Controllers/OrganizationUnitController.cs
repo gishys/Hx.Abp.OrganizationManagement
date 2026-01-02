@@ -228,5 +228,15 @@ public class OrganizationUnitController(IOrganizationUnitAppService organization
     {
         return _organizationUnitAppService.GetOrganizationUnitsByRoleIdAsync(roleId);
     }
+
+    /// <summary>
+    /// 获取用户所属的组织单元列表
+    /// </summary>
+    [HttpGet]
+    [Route("users/{userId}/organizations")]
+    public Task<ListResultDto<OrganizationUnitDto>> GetOrganizationAsync(Guid userId)
+    {
+        return _organizationUnitAppService.GetOrganizationAsync(userId);
+    }
 }
 

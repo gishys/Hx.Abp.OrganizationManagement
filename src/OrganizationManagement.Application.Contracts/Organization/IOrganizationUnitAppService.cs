@@ -98,5 +98,10 @@ public interface IOrganizationUnitAppService :
     /// 获取角色所属的组织单元列表
     /// </summary>
     Task<ListResultDto<OrganizationUnitDto>> GetOrganizationUnitsByRoleIdAsync(Guid roleId);
+
+    /// <summary>
+    /// 获取用户所属的组织单元列表
+    /// </summary>
+    Task<ListResultDto<OrganizationUnitDto>> GetOrganizationAsync(Guid userId);
 }
 
