@@ -250,24 +250,54 @@ public class OrganizationUnitAppService : IdentityAppServiceBase, IOrganizationU
         return user?.OrganizationUnits;
     }
 
-    public async Task<ICollection<string>?> GetOrganizationXzqdmAsync(Guid userId)
+    public virtual async Task<ListResultDto<OrganizationUnitDto>> GetOrganizationUnitsByUserIdAsync(Guid userId)
     {
-        var result = new List<string>();
-        var user = await UserRepository.FindAsync(userId);
-        if (user != null)
+        var user = await UserRepository.GetAsync(userId);
+        if (user?.OrganizationUnits == null || user.OrganizationUnits.Count == 0)
         {
-            var orgs = user.OrganizationUnits.Select(d => d.OrganizationUnitId);
-            var orgUnits = await OrganizationUnitRepository.GetListAsync(orgs);
-            foreach (var orgUnit in orgUnits)
+            return new ListResultDto<OrganizationUnitDto>([]);
+        }
+
+        var organizationUnitIds = user.OrganizationUnits.Select(ou => ou.OrganizationUnitId).ToList();
+        var organizationUnits = new List<OrganizationUnit>();
+        foreach (var id in organizationUnitIds)
+        {
+            var orgUnit = await OrganizationUnitRepository.FindAsync(id);
+            if (orgUnit != null)
             {
-                if (orgUnit.ExtraProperties["XZQDM"] is string xzqdm)
-                {
-                    result.AddRange(xzqdm.Split(','));
-                }
+                organizationUnits.Add(orgUnit);
             }
         }
-        result = [.. result.Distinct()];
-        return result;
+
+        return new ListResultDto<OrganizationUnitDto>(
+            ObjectMapper.Map<List<OrganizationUnit>, List<OrganizationUnitDto>>(organizationUnits));
+    }
+
+    public virtual async Task<ListResultDto<OrganizationUnitDto>> GetOrganizationUnitsByRoleIdAsync(Guid roleId)
+    {
+        // 验证角色是否存在
+        var role = await RoleRepository.FindAsync(roleId);
+        if (role == null)
+        {
+            return new ListResultDto<OrganizationUnitDto>([]);
+        }
+
+        // 获取所有组织单元
+        var allOrganizationUnits = await OrganizationUnitRepository.GetListAsync(false);
+        var organizationUnits = new List<OrganizationUnit>();
+
+        // 检查每个组织单元是否包含该角色
+        foreach (var orgUnit in allOrganizationUnits)
+        {
+            var roles = await OrganizationUnitRepository.GetRolesAsync(orgUnit, null, int.MaxValue, 0);
+            if (roles.Any(r => r.Id == roleId))
+            {
+                organizationUnits.Add(orgUnit);
+            }
+        }
+
+        return new ListResultDto<OrganizationUnitDto>(
+            ObjectMapper.Map<List<OrganizationUnit>, List<OrganizationUnitDto>>(organizationUnits));
     }
 }
 

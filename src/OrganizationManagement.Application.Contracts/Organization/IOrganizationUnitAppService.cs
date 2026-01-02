@@ -90,8 +90,13 @@ public interface IOrganizationUnitAppService :
     Task DeleteUserAsync(Guid organizationUnitId, Guid userId);
 
     /// <summary>
-    /// 获取用户的组织行政区代码列表
+    /// 获取用户所属的组织单元列表
     /// </summary>
-    Task<ICollection<string>?> GetOrganizationXzqdmAsync(Guid userId);
+    Task<ListResultDto<OrganizationUnitDto>> GetOrganizationUnitsByUserIdAsync(Guid userId);
+
+    /// <summary>
+    /// 获取角色所属的组织单元列表
+    /// </summary>
+    Task<ListResultDto<OrganizationUnitDto>> GetOrganizationUnitsByRoleIdAsync(Guid roleId);
 }
 

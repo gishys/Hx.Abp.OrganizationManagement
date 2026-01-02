@@ -210,13 +210,23 @@ public class OrganizationUnitController(IOrganizationUnitAppService organization
     }
 
     /// <summary>
-    /// 获取用户的组织行政区代码列表
+    /// 获取用户所属的组织单元列表
     /// </summary>
     [HttpGet]
-    [Route("users/{userId}/xzqdm")]
-    public Task<System.Collections.Generic.ICollection<string>?> GetOrganizationXzqdmAsync(Guid userId)
+    [Route("users/{userId}/organization-units")]
+    public Task<ListResultDto<OrganizationUnitDto>> GetOrganizationUnitsByUserIdAsync(Guid userId)
     {
-        return _organizationUnitAppService.GetOrganizationXzqdmAsync(userId);
+        return _organizationUnitAppService.GetOrganizationUnitsByUserIdAsync(userId);
+    }
+
+    /// <summary>
+    /// 获取角色所属的组织单元列表
+    /// </summary>
+    [HttpGet]
+    [Route("roles/{roleId}/organization-units")]
+    public Task<ListResultDto<OrganizationUnitDto>> GetOrganizationUnitsByRoleIdAsync(Guid roleId)
+    {
+        return _organizationUnitAppService.GetOrganizationUnitsByRoleIdAsync(roleId);
     }
 }
 
