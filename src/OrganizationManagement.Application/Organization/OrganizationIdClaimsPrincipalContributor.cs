@@ -21,7 +21,7 @@ public class OrganizationIdClaimsPrincipalContributor : IAbpClaimsPrincipalContr
         if (userId != null)
         {
             var userService = context.ServiceProvider.GetRequiredService<OrganizationUnitAppService>();
-            var orgsResult = await userService.GetOrganizationAsync(new Guid(userId.Value));
+            var orgsResult = await userService.GetOrganizationUnitsByUserIdAsync(new Guid(userId.Value));
             var value = orgsResult?.Items == null || orgsResult.Items.Count == 0 
                 ? "" 
                 : string.Join(",", orgsResult.Items.Select(d => d.Id.ToString()));
