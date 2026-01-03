@@ -48,7 +48,6 @@ public class OrganizationManagementHttpApiHostModule : AbpModule
         var configuration = context.Services.GetConfiguration();
         _ = context.Services.GetHostingEnvironment();
 
-        ConfigureUrls(configuration);
         ConfigureConventionalControllers();
         ConfigureAuthentication(context, configuration);
         ConfigureSwagger(context, configuration);
@@ -62,15 +61,6 @@ public class OrganizationManagementHttpApiHostModule : AbpModule
         {
             options.UseNpgsql();
         });
-    }
-
-    private void ConfigureUrls(IConfiguration _)
-    {
-        // 禁用自动 API 控制器，使用手动创建的 Controller
-        // Configure<AbpAspNetCoreMvcOptions>(options =>
-        // {
-        //     options.ConventionalControllers.Create(typeof(OrganizationManagementApplicationModule).Assembly);
-        // });
     }
 
     private void ConfigureConventionalControllers()
