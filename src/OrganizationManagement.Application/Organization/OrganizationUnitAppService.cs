@@ -122,10 +122,14 @@ public class OrganizationUnitAppService : IdentityAppServiceBase, IOrganizationU
             ObjectMapper.Map<List<OrganizationUnit>, List<OrganizationUnitDto>>(organizationUnits));
     }
 
-    public virtual async Task<ListResultDto<string>> GetRoleNamesAsync(Guid id)
+    public virtual async Task<ListResultDto<IdentityRoleDto>> GetRoleNamesAsync(Guid id)
     {
-        var inOrganizationUnitRoleNames = await UserRepository.GetRoleNamesInOrganizationUnitAsync(id);
-        return new ListResultDto<string>(inOrganizationUnitRoleNames);
+        var organizationUnit = await OrganizationUnitRepository.GetAsync(id);
+        var organizationUnitRoles = await OrganizationUnitRepository
+            .GetRolesAsync(organizationUnit, null, int.MaxValue, 0);
+
+        return new ListResultDto<IdentityRoleDto>(
+            ObjectMapper.Map<List<IdentityRole>, List<IdentityRoleDto>>(organizationUnitRoles));
     }
 
     public virtual async Task<PagedResultDto<IdentityRoleDto>> GetUnaddedRolesAsync(Guid id, OrganizationUnitGetUnaddedRoleListInput input)

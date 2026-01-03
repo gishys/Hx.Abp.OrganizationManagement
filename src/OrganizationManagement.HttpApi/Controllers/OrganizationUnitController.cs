@@ -157,15 +157,15 @@ public class OrganizationUnitController(IOrganizationUnitAppService organization
     }
 
     /// <summary>
-    /// 获取组织单元中的角色名称列表
+    /// 获取组织单元中的角色列表（不分页）
     /// </summary>
     /// <param name="id">组织单元ID</param>
-    /// <returns>角色名称列表</returns>
+    /// <returns>角色列表</returns>
     [HttpGet]
-    [Route("{id}/role-names")]
-    [ProducesResponseType(typeof(ListResultDto<string>), 200)]
+    [Route("{id}/roles-list")]
+    [ProducesResponseType(typeof(ListResultDto<Volo.Abp.Identity.IdentityRoleDto>), 200)]
     [ProducesResponseType(404)]
-    public Task<ListResultDto<string>> GetRoleNamesAsync(Guid id)
+    public Task<ListResultDto<Volo.Abp.Identity.IdentityRoleDto>> GetRoleNamesAsync(Guid id)
     {
         return _organizationUnitAppService.GetRoleNamesAsync(id);
     }

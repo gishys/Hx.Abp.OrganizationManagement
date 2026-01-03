@@ -45,9 +45,9 @@ public interface IOrganizationUnitAppService :
     Task<ListResultDto<OrganizationUnitDto>> FindChildrenAsync(OrganizationUnitGetChildrenDto input);
 
     /// <summary>
-    /// 获取组织单元的角色名称列表
+    /// 获取组织单元的角色列表
     /// </summary>
-    Task<ListResultDto<string>> GetRoleNamesAsync(Guid id);
+    Task<ListResultDto<IdentityRoleDto>> GetRoleNamesAsync(Guid id);
 
     /// <summary>
     /// 获取未添加到组织单元的角色列表
