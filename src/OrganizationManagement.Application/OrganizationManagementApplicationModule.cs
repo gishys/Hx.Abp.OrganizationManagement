@@ -3,6 +3,7 @@ using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
+using Volo.Abp.PermissionManagement;
 
 namespace OrganizationManagement;
 
@@ -25,6 +26,12 @@ public class OrganizationManagementApplicationModule : AbpModule
         Configure<AbpPermissionOptions>(options =>
         {
             options.ValueProviders.Add<OrganizationUnitPermissionValueProvider>();
+        });
+
+        // 注册组织单元权限管理提供者，供权限管理界面按 providerName=OU 获取/设置组织权限
+        Configure<PermissionManagementOptions>(options =>
+        {
+            options.ManagementProviders.Add<OrganizationUnitPermissionManagementProvider>();
         });
     }
 }

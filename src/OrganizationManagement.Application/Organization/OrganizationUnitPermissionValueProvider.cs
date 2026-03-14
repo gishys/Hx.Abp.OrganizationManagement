@@ -12,7 +12,8 @@ namespace OrganizationManagement.Organization;
 public class OrganizationUnitPermissionValueProvider(
     IPermissionStore permissionStore) : PermissionValueProvider(permissionStore)
 {
-    public const string ProviderName = "O";
+    /// <summary>与前端及 PermissionManagementOptions.ProviderPolicies 一致，使用 OU。</summary>
+    public const string ProviderName = "OU";
 
     public override string Name => ProviderName;
 
